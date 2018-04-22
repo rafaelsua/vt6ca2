@@ -2,59 +2,22 @@ import { Component } from '@angular/core';
 import { bootstrap } from '@angular/platform-browser-dynamic';
 
 @Component({
-  selector: 'timer',
-  template: `
-    <div class="text-center">
-      <img src="assets/img/reloj.png" alt="Reloj">
-      <h1> {{ minutos }}:{{ segundos | number: '2.0' }} </h1>
-      <p>
-        <button (click)="togglePause()"
-          class="btn btn-danger">
-          {{ buttonLabel }}
-        </button>
-      </p>
-    </div>
-`
+  selector: 'countdown',
+  template: '<h1>Quedan: {{seconds}} </h1>'
 })
 
 
-class TimerComponent {
-  minutos: number;
-  segundos: number;
-  isPaused: boolean;
-  buttonLabel: string;
+class CountdownComponent {
+  seconds: number = 25;
+  intervalId: number;
 
   constructor() {
-    this.resetTimer();
-    setInterval(() => this.tick(), 1000);
-  }
-
-  resetTimer(): void {
-    this.isPaused = true;
-    this.minutos = 24;
-    this.segundos = 59;
-    this.buttonLabel = 'Empezar';
+    this.intervalId = setInterval(() => this.tick(), 1000);
   }
 
   private tick(): void {
-    if (!this.isPaused) {
-      this.buttonLabel = 'Pausar';
-
-      if (--this.segundos < 0) {
-        this.segundos = 59;
-        if (--this.minutos < 0) {
-          this.resetTimer();
-        }
-      }
-    }
-  }
-
-  togglePause(): void {
-    this.isPaused = !this.isPaused;
-    if (this.minutos < 24 || this.segundos < 59) {
-      this.buttonLabel = this.isPaused ? 'Reanudar' : 'Pausar';
+    if (--this.seconds < 1) {
+      clearInterval(this.intervalId);
     }
   }
 }
-
-bootstrap(TimerComponent);
